@@ -23,7 +23,6 @@ def require_env_exists():
         subprocess.check_output(["mamba", "env", "list", "--quiet", "--json"])
         .decode()
         .strip()
-        .splitlines()
     )["envs"]
 
     for env in envs:
