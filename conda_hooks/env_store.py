@@ -8,7 +8,7 @@ def main():
 
     env = util.export_env()
 
-    env["dependencies"] = sorted(env["dependencies"])
+    env["dependencies"] = sorted(env.get("dependencies", []))
     if pip_dependencies:
         env["dependencies"].append(pip_dependencies)
 
