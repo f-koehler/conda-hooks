@@ -2,5 +2,6 @@
   name: conda-env-store
   language: conda
   pass_filenames: false
-  stages: commit
+  stages:
+    - commit
   entry: conda_env_store
