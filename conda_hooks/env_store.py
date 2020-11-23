@@ -36,7 +36,9 @@ def main():
         exit(0)
 
     output = (
-        subprocess.check_output(["mamba", "env", "export", "--from-history", "--quiet"])
+        subprocess.check_output(
+            ["mamba", "env", "export", "--from-history", "--quiet", "-n", name]
+        )
         .decode()
         .strip()
     )
