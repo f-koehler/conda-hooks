@@ -65,3 +65,17 @@ def read_pip_dependencies():
 def write_env_file(env):
     with open("environment.yml", "w") as fptr:
         yaml.dump(env, fptr, Dumper=Dumper)
+
+
+def export_env():
+    name = read_env_name()
+
+    output = (
+        subprocess.check_output(
+            ["mamba", "env", "export", "--from-history", "--quiet", "-n", name]
+        )
+        .decode()
+        .strip()
+    )
+    env = yaml.load(output, Loader=Loader)
+    return env

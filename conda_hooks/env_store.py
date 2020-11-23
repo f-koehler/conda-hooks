@@ -6,7 +6,7 @@ def main():
 
     util.require_env_exists()
 
-    env = util.read_env_file()
+    env = util.export_env()
 
     env["dependencies"] = sorted(env["dependencies"])
     if pip_dependencies:
