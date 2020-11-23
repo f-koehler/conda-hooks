@@ -74,6 +74,8 @@ def export_env():
         .strip()
     )
     env = yaml.load(output, Loader=Loader)
+    print("exported environment:")
+    print(env)
     return env
 
 
