@@ -50,10 +50,9 @@ def main():
     )
     env = yaml.load(output, Loader=Loader)
 
+    env["dependencies"] = sorted(env["dependencies"])
     if pip_dependencies:
         env["dependencies"].append(pip_dependencies)
-
-    env["dependencies"] = sorted(env["dependencies"])
 
     del env["prefix"]
 
