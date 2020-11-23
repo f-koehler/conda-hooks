@@ -1,13 +1,13 @@
 - id: conda-env-store
   name: conda-env-store
-  language: python
+  language: conda
   pass_filenames: false
   stages:
     - commit
   entry: conda_env_store
 - id: conda-env-update
   name: conda-env-update
-  language: python
+  language: conda
   pass_filenames: false
   stages:
     - merge-commit
