@@ -1,7 +1,0 @@
-name: conda-hooks
-channels:
-  - conda-forge
-  - defaults
-dependencies:
-  - mamba
-  - pip

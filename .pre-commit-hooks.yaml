@@ -1,6 +1,6 @@
 - id: conda-env-store
   name: conda-env-store
-  language: conda
+  language: python
   pass_filenames: false
   stages:
     - commit
