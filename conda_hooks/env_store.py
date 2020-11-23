@@ -15,7 +15,7 @@ def main():
         exit(0)
 
     with open("environment.yml", "r") as fptr:
-        name = yaml.load(fptr)["name"]
+        name = yaml.load(fptr, Loader=Loader)["name"]
 
     output = (
         subprocess.check_output(["mamba", "env", "list", "--quiet"])
@@ -40,7 +40,7 @@ def main():
         .decode()
         .strip()
     )
-    env = yaml.load(output)
+    env = yaml.load(output, Loader=Loader)
     env["dependencies"] = sorted(env["dependencies"])
 
     with open("environment.yml", "w") as fptr:
