@@ -2,6 +2,7 @@ from pathlib import Path
 import subprocess
 import re
 import yaml
+import json
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -18,23 +19,19 @@ def require_env_file():
 def require_env_exists():
     name = read_env_name()
 
-    output = (
-        subprocess.check_output(["mamba", "env", "list", "--quiet"])
+    envs = json.loads(
+        subprocess.check_output(["mamba", "env", "list", "--quiet", "--json"])
         .decode()
         .strip()
         .splitlines()
-    )
+    )["envs"]
 
-    regex = re.compile("^" + name + r"\s+")
-    environment_exists = False
-    for line in output:
-        if regex.match(line):
-            environment_exists = True
-            break
+    for env in envs:
+        if Path(env).name == name:
+            return
 
-    if not environment_exists:
-        print("the environment has not yet been created, skipping")
-        exit(0)
+    print("the environment has not yet been created, skipping")
+    exit(0)
 
 
 def read_env_file():
