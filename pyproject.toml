@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "conda-hooks"
+version = "0.1.0"
+description = ""
+authors = ["Fabian Köhler <fabian.koehler@protonmail.ch>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+conda_env_store = "conda_hooks.env_store:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
