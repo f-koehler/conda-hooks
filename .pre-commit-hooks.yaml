@@ -5,3 +5,10 @@
   stages:
     - commit
   entry: conda_env_store
+- id: conda-env-update
+  name: conda-env-update
+  language: python
+  pass_filenames: false
+  stages:
+    - merge-commit
+  entry: conda_env_update

@@ -72,10 +72,28 @@ def export_env():
 
     output = (
         subprocess.check_output(
-            ["mamba", "env", "export", "--from-history", "--quiet", "-n", name]
+            ["mamba", "env", "export", "--from-history", "--quiet", "--name", name]
         )
         .decode()
         .strip()
     )
     env = yaml.load(output, Loader=Loader)
     return env
+
+
+def update_env():
+    name = read_env_name()
+    require_env_exists()
+
+    subprocess.run(
+        [
+            "mamba",
+            "env",
+            "update",
+            "--quiet",
+            "--name",
+            name,
+            "--file",
+            "environment.yml",
+        ]
+    )
