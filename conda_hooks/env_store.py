@@ -15,7 +15,13 @@ def main():
         exit(0)
 
     with open("environment.yml", "r") as fptr:
-        name = yaml.load(fptr, Loader=Loader)["name"]
+        env = yaml.load(fptr, Loader=Loader)
+        name = env["name"]
+
+        pip_dependencies = None
+        for dep in env.get("dependencies", []):
+            if isinstance(dep, dict) and ("pip" in dep):
+                pip_dependencies = dep
 
     output = (
         subprocess.check_output(["mamba", "env", "list", "--quiet"])
@@ -43,7 +49,13 @@ def main():
         .strip()
     )
     env = yaml.load(output, Loader=Loader)
+
+    if pip_dependencies:
+        env["dependencies"].append(pip_dependencies)
+
     env["dependencies"] = sorted(env["dependencies"])
+
+    del env["prefix"]
 
     with open("environment.yml", "w") as fptr:
         yaml.dump(env, fptr, Dumper=Dumper)
