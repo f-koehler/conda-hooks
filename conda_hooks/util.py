@@ -93,16 +93,17 @@ def read_pip_dependencies():
 
 
 def read_env_file():
-    LOGGER.info("read env file")
     env_file = find_env_file()
+    LOGGER.info("read env file: %s", env_file)
 
     with open(env_file, "r") as fptr:
         return yaml.load(fptr, Loader=Loader)
 
 
 def write_env_file(env):
-    LOGGER.info("write env file")
     env_file = find_env_file()
+    LOGGER.info("write env file: %s", env_file)
+    LOGGER.info("new environment: %s", str(env))
 
     with open(env_file, "w") as fptr:
         yaml.dump(env, fptr, Dumper=Dumper)
