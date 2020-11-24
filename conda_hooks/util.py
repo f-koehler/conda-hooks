@@ -17,13 +17,19 @@ LOGGER = logging.getLogger(__name__)
 
 
 @lru_cache
-def find_mamba():
+def find_conda():
     path = shutil.which("mamba")
+    if path:
+        LOGGER.info("found mamba: %s", str(Path(path).resolve()))
+        return path
+
+    LOGGER.warn("did not find mamba, try to find conda (which might be slower)")
+
+    path = shutil.which("conda")
     if not path:
-        LOGGER.error("failed to find mamba")
+        LOGGER.error("failed to find conda")
         exit(0)
 
-    LOGGER.info("found mamba: %s", str(Path(path).resolve()))
     return path
 
 
@@ -42,7 +48,7 @@ def require_env_exists():
     name = read_env_name()
 
     output = (
-        subprocess.check_output([find_mamba(), "env", "list", "--quiet", "--json"])
+        subprocess.check_output([find_conda(), "env", "list", "--quiet", "--json"])
         .decode()
         .strip()
     )
@@ -110,7 +116,7 @@ def export_env():
     output = (
         subprocess.check_output(
             [
-                find_mamba(),
+                find_conda(),
                 "env",
                 "export",
                 "--from-history",
@@ -134,7 +140,7 @@ def update_env():
 
     subprocess.run(
         [
-            find_mamba(),
+            find_conda(),
             "env",
             "update",
             "--quiet",
