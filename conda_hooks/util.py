@@ -41,13 +41,15 @@ def find_env_file():
 def require_env_exists():
     name = read_env_name()
 
-    envs = json.loads(
+    output = (
         subprocess.check_output(
             [find_mamba(), "env", "list", "--quiet", "--json"], shell=True
         )
         .decode()
         .strip()
-    )["envs"]
+    )
+    LOGGER.info("environment list: %s", output)
+    envs = json.loads(output)["envs"]
 
     for env in envs:
         if Path(env).name == name:
