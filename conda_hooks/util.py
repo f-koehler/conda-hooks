@@ -42,9 +42,7 @@ def require_env_exists():
     name = read_env_name()
 
     output = (
-        subprocess.check_output(
-            [find_mamba(), "env", "list", "--quiet", "--json"], shell=True
-        )
+        subprocess.check_output([find_mamba(), "env", "list", "--quiet", "--json"])
         .decode()
         .strip()
     )
@@ -120,7 +118,6 @@ def export_env():
                 "--name",
                 name,
             ],
-            shell=True,
         )
         .decode()
         .strip()
@@ -146,5 +143,4 @@ def update_env():
             "--file",
             find_env_file(),
         ],
-        shell=True,
     )
