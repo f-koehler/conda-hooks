@@ -1,6 +1,6 @@
 - id: conda-env-store
   name: conda-env-store
-  language: conda
+  language: python
   pass_filenames: false
   stages:
     - commit
@@ -8,7 +8,7 @@
   always_run: true
 - id: conda-env-update
   name: conda-env-update
-  language: conda
+  language: python
   pass_filenames: false
   stages:
     - merge-commit
