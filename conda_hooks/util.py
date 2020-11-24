@@ -12,6 +12,7 @@ try:
 except ImportError:
     from yaml import Loader, Dumper
 
+logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
 
 
