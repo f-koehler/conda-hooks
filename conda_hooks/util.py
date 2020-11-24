@@ -92,6 +92,12 @@ def read_pip_dependencies():
     return pip_dependencies
 
 
+@lru_cache
+def read_channels():
+    env = read_env_file()
+    return env.get("channels", [])
+
+
 def read_env_file():
     env_file = find_env_file()
     LOGGER.info("read env file: %s", env_file)
