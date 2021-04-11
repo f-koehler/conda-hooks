@@ -1,16 +1,13 @@
-from pathlib import Path
-import subprocess
-import re
-import yaml
 import json
 import logging
-from functools import lru_cache
 import shutil
+import subprocess
+from functools import lru_cache
+from pathlib import Path
 
-try:
-    from yaml import CLoader as Loader, CDumper as Dumper
-except ImportError:
-    from yaml import Loader, Dumper
+import yaml
+from yaml import CDumper as Dumper
+from yaml import CLoader as Loader
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
@@ -102,7 +99,7 @@ def read_env_file():
     env_file = find_env_file()
     LOGGER.info("read env file: %s", env_file)
 
-    with open(env_file, "r") as fptr:
+    with open(env_file) as fptr:
         return yaml.load(fptr, Loader=Loader)
 
 
