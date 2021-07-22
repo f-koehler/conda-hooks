@@ -12,33 +12,42 @@ from yaml import CLoader as Loader
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
 
+ENV_DEFAULT_PATHS = [
+    Path("environment.yml"),
+    Path("environment.yaml"),
+    Path("conda.yml"),
+    Path("conda.yaml"),
+]
+
 
 @lru_cache
-def find_conda():
-    path = shutil.which("mamba")
-    if path:
-        LOGGER.info("found mamba: %s", str(Path(path).resolve()))
+def find_conda() -> Path:
+    result = shutil.which("mamba")
+    if result:
+        path = Path(result).resolve()
+        LOGGER.info(f"found mamba: {path}")
         return path
 
     LOGGER.warn("did not find mamba, try to find conda (which might be slower)")
 
-    path = shutil.which("conda")
-    if not path:
-        LOGGER.error("failed to find conda")
-        exit(0)
+    if result:
+        path = Path(result).resolve()
+        LOGGER.info(f"found conda: {path}")
+        return path
 
-    return path
+    LOGGER.error("failed to find conda")
+    exit(1)
 
 
 @lru_cache
-def find_env_file():
-    path = Path("environment.yml")
-    if not path.exists():
-        LOGGER.error("failed to find env file")
-        exit(0)
+def find_env_file() -> Path:
+    for path in ENV_DEFAULT_PATHS:
+        if path.exists():
+            LOGGER.info("found env file: {path}")
+            return path
 
-    LOGGER.info("found env file: %s", "environment.yml")
-    return str(path)
+    LOGGER.error("failed to find env file")
+    exit(1)
 
 
 def require_env_exists():
@@ -57,16 +66,17 @@ def require_env_exists():
             return
 
     print("the environment has not yet been created, skipping")
-    exit(0)
+    exit(1)
 
 
 @lru_cache
-def read_env_name():
+def read_env_name() -> str:
     env = read_env_file()
     if "name" not in env:
         LOGGER.error("env file does not include a name field")
-        exit(0)
+        exit(1)
     LOGGER.info("found env name: %s", env["name"])
+
     return env["name"]
 
 
