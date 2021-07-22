@@ -10,6 +10,13 @@ python = "^3.8"
 PyYAML = "^5.3.1"
 
 [tool.poetry.dev-dependencies]
+mypy = "^0.910"
+flake8 = "^3.9.2"
+pyupgrade = "^2.21.2"
+isort = "^5.9.2"
+invoke = "^1.6.0"
+pre-commit = "^2.13.0"
+pytest = "^6.2.4"
 
 [tool.poetry.scripts]
 conda_env_store = "conda_hooks.env_store:main"
