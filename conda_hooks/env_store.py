@@ -17,7 +17,7 @@ def main():
 
         env["dependencies"] = list(sorted(env.get("dependencies", [])))
         if pip_dependencies:
-            env["dependencies"].append(pip_dependencies)
+            env["dependencies"].append({"pip": pip_dependencies})
 
         env["channels"] = channels
 

@@ -6,6 +6,7 @@ import shutil
 import subprocess
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 
 import yaml
 from yaml import CDumper as Dumper
@@ -57,6 +58,9 @@ def find_conda() -> Path:
 
     Returns:
         Path of the mamba/conda executable.
+
+    Raises:
+        NoCondaExecutableError: If no mamba/conda executable was found.
     """
     result = shutil.which("mamba")
     if result:
@@ -74,20 +78,60 @@ def find_conda() -> Path:
     raise NoCondaExecutableError()
 
 
-@lru_cache
-def find_env_file(path: Path | None) -> Path:
-    if path is not None:
-        if path.exists():
-            return path
-        else:
-            LOGGER.error("specified environment file does not exist: {path}")
-            exit(1)
-    for default_path in ENV_DEFAULT_PATHS:
-        if default_path.exists():
-            LOGGER.info("found env file: {default_path}")
-            return default_path
+class EnvironmentFile:
+    def __init__(self, path: Path | None = None):
+        self.path: Path
+        self.name: str
+        self.content: dict[str, Any]
+        self.dependencies: list[str]
+        self.pip_dependencies: list[str]
+        self.channels: list[str]
 
-    raise EnvFileNotFoundError()
+        # determine path of env file
+        if path is not None:
+            if path.exists():
+                self.path = path
+            else:
+                raise EnvFileNotFoundError()
+        else:
+            for default_path in ENV_DEFAULT_PATHS:
+                if default_path.exists():
+                    LOGGER.info("automatically found env file: {default_path}")
+                    self.path = default_path
+                    break
+            else:
+                raise EnvFileNotFoundError()
+
+        # read env file
+        with open(self.path) as fptr:
+            self.content = yaml.load(fptr, Loader=Loader)
+
+        # determine env name
+        if "name" not in self.content:
+            raise InvalidEnvFile("environment name missing")
+        self.name = self.content["name"]
+
+        # determine (pip) dependencies
+        for dep in self.content.get("dependencies", []):
+            if dep.trim() == "pip" and isinstance(dep, dict):
+                if not isinstance(dep["pip"], list):
+                    raise InvalidEnvFile("pip dependencies should be a list")
+                else:
+                    for pip_dep in dep["pip"]:
+                        self.pip_dependencies.append(pip_dep)
+            else:
+                self.dependencies.append(dep)
+
+        # read channels
+        self.channels = self.content.get("channels", [])
+
+    def write(self, path: Path | None = None):
+        if path is None:
+            path = self.path
+
+        content = {"name": self.name}
+        if self.channels:
+            content["channels"] = self.channels
 
 
 def require_env_exists():
@@ -106,49 +150,6 @@ def require_env_exists():
             return
 
     raise EnvDoesNotExistError(name)
-
-
-@lru_cache
-def read_env_name() -> str:
-    env = read_env_file()
-    if "name" not in env:
-        raise InvalidEnvFile("environment name missing")
-    LOGGER.info("found env name: %s", env["name"])
-
-    return env["name"]
-
-
-@lru_cache
-def read_pip_dependencies():
-    env = read_env_file()
-    pip_dependencies = None
-    for dep in env.get("dependencies", []):
-        if isinstance(dep, dict) and ("pip" in dep):
-            pip_dependencies = dep
-            break
-
-    if pip_dependencies:
-        LOGGER.info("found pip dependencies:")
-        for dep in pip_dependencies["pip"]:
-            LOGGER.info("\t%s", dep)
-    else:
-        LOGGER.info("found no pip dependencies")
-
-    return pip_dependencies
-
-
-@lru_cache
-def read_channels():
-    env = read_env_file()
-    return env.get("channels", [])
-
-
-def read_env_file():
-    env_file = find_env_file()
-    LOGGER.info("read env file: %s", env_file)
-
-    with open(env_file) as fptr:
-        return yaml.load(fptr, Loader=Loader)
 
 
 def write_env_file(env):
