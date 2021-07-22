@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "conda-hooks"
-version = "0.2.1"
+version = "0.2.2"
 description = ""
 authors = ["Fabian Köhler <fabian.koehler@protonmail.ch>"]
 license = "MIT"
