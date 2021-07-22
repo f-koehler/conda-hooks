@@ -4,6 +4,8 @@ version = "0.2.2"
 description = ""
 authors = ["Fabian Köhler <fabian.koehler@protonmail.ch>"]
 license = "MIT"
+readme = "README.md"
+repository = "https://github.com/f-koehler/conda-hooks"
 
 [tool.poetry.dependencies]
 python = "^3.8"

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import logging
 import shutil
@@ -9,8 +11,8 @@ import yaml
 from yaml import CDumper as Dumper
 from yaml import CLoader as Loader
 
-logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
+"""A logger to use throughout the module."""
 
 ENV_DEFAULT_PATHS = [
     Path("environment.yml"),
@@ -18,10 +20,44 @@ ENV_DEFAULT_PATHS = [
     Path("conda.yml"),
     Path("conda.yaml"),
 ]
+"""Default names of the Anaconda environment file."""
+
+
+class CondaHookError(Exception):
+    pass
+
+
+class NoCondaExecutableError(CondaHookError):
+    def __init__(self):
+        super().__init__("failed to find mamba/conda")
+
+
+class EnvFileNotFoundError(CondaHookError):
+    def __init__(self):
+        super().__init__("failed to find env file")
+
+
+class InvalidEnvFile(CondaHookError):
+    def __init__(self, message: str):
+        super().__init__(f"invalid env file: {message}")
+
+
+class EnvDoesNotExistError(CondaHookError):
+    def __init__(self, name: str):
+        super().__init__(f"environment does not exist: {name}")
 
 
 @lru_cache
 def find_conda() -> Path:
+    """Find mamba/conda executable.
+
+    This routine finds an executable to run conda commands. It prefers mamba since it
+    is much faster for many operations. If mamba is not present in the PATH environment
+    variable it will try to locate conda instead.
+
+    Returns:
+        Path of the mamba/conda executable.
+    """
     result = shutil.which("mamba")
     if result:
         path = Path(result).resolve()
@@ -35,19 +71,23 @@ def find_conda() -> Path:
         LOGGER.info(f"found conda: {path}")
         return path
 
-    LOGGER.error("failed to find conda")
-    exit(1)
+    raise NoCondaExecutableError()
 
 
 @lru_cache
-def find_env_file() -> Path:
-    for path in ENV_DEFAULT_PATHS:
+def find_env_file(path: Path | None) -> Path:
+    if path is not None:
         if path.exists():
-            LOGGER.info("found env file: {path}")
             return path
+        else:
+            LOGGER.error("specified environment file does not exist: {path}")
+            exit(1)
+    for default_path in ENV_DEFAULT_PATHS:
+        if default_path.exists():
+            LOGGER.info("found env file: {default_path}")
+            return default_path
 
-    LOGGER.error("failed to find env file")
-    exit(1)
+    raise EnvFileNotFoundError()
 
 
 def require_env_exists():
@@ -65,16 +105,14 @@ def require_env_exists():
         if Path(env).name == name:
             return
 
-    print("the environment has not yet been created, skipping")
-    exit(1)
+    raise EnvDoesNotExistError(name)
 
 
 @lru_cache
 def read_env_name() -> str:
     env = read_env_file()
     if "name" not in env:
-        LOGGER.error("env file does not include a name field")
-        exit(1)
+        raise InvalidEnvFile("environment name missing")
     LOGGER.info("found env name: %s", env["name"])
 
     return env["name"]
