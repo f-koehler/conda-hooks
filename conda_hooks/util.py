@@ -129,9 +129,19 @@ class EnvironmentFile:
         if path is None:
             path = self.path
 
-        content = {"name": self.name}
+        content: dict[str, Any] = {"name": self.name}
         if self.channels:
             content["channels"] = self.channels
+        dependencies: list[str | dict[str, list[str]]]
+
+        dependencies += self.dependencies
+        if self.pip_dependencies:
+            dependencies.append({"pip": self.pip_dependencies})
+
+        content["dependencies"] = dependencies
+
+        with open(path, "w") as fptr:
+            yaml.dump(content, fptr, Dumper=Dumper)
 
 
 def require_env_exists():
