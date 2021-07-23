@@ -1,0 +1,8 @@
+name: conda_hooks_channels
+channels:
+  - nvidia
+  - pytorch
+  - conda-forge
+dependencies:
+  - numpy
+  - matplotlib

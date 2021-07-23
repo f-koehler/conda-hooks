@@ -37,3 +37,21 @@ def test_pip_deps(data_directory: Path):
     env = util.EnvironmentFile(data_directory / "pip_deps.yml")
     assert env.dependencies == ["numpy", "pip"]
     assert env.pip_dependencies == ["matplotlib", "mypy"]
+
+
+def test_channels(data_directory: Path):
+    env = util.EnvironmentFile(data_directory / "channels.yml")
+    assert env.channels == ["nvidia", "pytorch", "conda-forge"]
+
+
+# def test_create_remove(data_directory: Path):
+#     env = util.EnvironmentFile(data_directory / "small.yml")
+#     env.remove()
+
+#     assert not env.exists()
+
+#     env.create()
+#     assert env.exists()
+
+#     env.remove()
+#     assert not env.exists()

@@ -202,3 +202,35 @@ class EnvironmentFile:
                 self.path,
             ],
         )
+
+    def create(self):
+        if self.exists():
+            return
+
+        cmd = [
+            str(find_conda_executable()),
+            "env",
+            "create",
+            "--quiet",
+            "--name",
+            self.name,
+            "--file",
+            str(self.path),
+        ]
+
+        subprocess.check_output(cmd)
+
+    def remove(self):
+        if not self.exists():
+            return
+
+        subprocess.check_output(
+            [
+                find_conda_executable(),
+                "env",
+                "remove",
+                "--quiet",
+                "--name",
+                self.name,
+            ]
+        )
