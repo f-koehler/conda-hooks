@@ -1,6 +1,6 @@
 import logging
 
-from .util import EnvironmentFile, CondaHookError
+from .util import CondaHookError, EnvironmentFile
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
