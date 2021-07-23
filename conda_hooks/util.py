@@ -49,7 +49,7 @@ class EnvDoesNotExistError(CondaHookError):
 
 
 @lru_cache
-def find_conda() -> Path:
+def find_conda_executable() -> Path:
     """Find mamba/conda executable.
 
     This routine finds an executable to run conda commands. It prefers mamba since it
@@ -112,15 +112,18 @@ class EnvironmentFile:
         self.name = self.content["name"]
 
         # determine (pip) dependencies
-        for dep in self.content.get("dependencies", []):
-            if dep.trim() == "pip" and isinstance(dep, dict):
-                if not isinstance(dep["pip"], list):
+        for dependency in self.content.get("dependencies", []):
+            if dependency.trim() == "pip" and isinstance(dependency, dict):
+                if not isinstance(dependency["pip"], list):
                     raise InvalidEnvFile("pip dependencies should be a list")
                 else:
-                    for pip_dep in dep["pip"]:
-                        self.pip_dependencies.append(pip_dep)
+                    for pip_dependency in dependency["pip"]:
+                        self.pip_dependencies.append(pip_dependency)
             else:
-                self.dependencies.append(dep)
+                self.dependencies.append(dependency)
+
+        self.dependencies.sort()
+        self.pip_dependencies.sort()
 
         # read channels
         self.channels = self.content.get("channels", [])
@@ -143,29 +146,31 @@ class EnvironmentFile:
         with open(path, "w") as fptr:
             yaml.dump(content, fptr, Dumper=Dumper)
 
-    def env_exists(self) -> bool:
-        envs = json.loads(
-            subprocess.check_output([find_conda(), "env", "list", "--quiet", "--json"])
+    def exists(self) -> bool:
+        environments = json.loads(
+            subprocess.check_output(
+                [find_conda_executable(), "env", "list", "--quiet", "--json"]
+            )
             .decode()
             .strip()
         )
-        for env in envs:
-            if Path(env).name == self.name:
+        for environment in environments:
+            if Path(environment).name == self.name:
                 return True
 
         return False
 
     def require_env_exists(self):
-        if not self.env_exists():
+        if not self.exists():
             raise EnvDoesNotExistError(self.name)
 
     def export_env_dependencies(self) -> list[str]:
         self.require_env_exists()
 
-        stored_env: dict[str, Any] = yaml.load(
+        exported_environment: dict[str, Any] = yaml.load(
             subprocess.check_output(
                 [
-                    find_conda(),
+                    find_conda_executable(),
                     "env",
                     "export",
                     "--from-history",
@@ -177,14 +182,16 @@ class EnvironmentFile:
             Loader=Loader,
         )
 
-        return [dep for dep in stored_env.get("dependencies", [])]
+        return [
+            dependency for dependency in exported_environment.get("dependencies", [])
+        ]
 
     def update_env(self):
         self.require_env_exists()
 
         subprocess.run(
             [
-                find_conda(),
+                find_conda_executable(),
                 "env",
                 "update",
                 "--quiet",

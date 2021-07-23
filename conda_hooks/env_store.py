@@ -11,7 +11,7 @@ def main():
     try:
         env = EnvironmentFile()
 
-        if env.env_exists():
+        if env.exists():
             for dep in env.export_env_dependencies():
                 if dep not in env.dependencies:
                     env.dependencies.append(dep)
