@@ -143,73 +143,54 @@ class EnvironmentFile:
         with open(path, "w") as fptr:
             yaml.dump(content, fptr, Dumper=Dumper)
 
+    def env_exists(self) -> bool:
+        envs = json.loads(
+            subprocess.check_output([find_conda(), "env", "list", "--quiet", "--json"])
+            .decode()
+            .strip()
+        )
+        for env in envs:
+            if Path(env).name == self.name:
+                return True
 
-def require_env_exists():
-    name = read_env_name()
+        return False
 
-    output = (
-        subprocess.check_output([find_conda(), "env", "list", "--quiet", "--json"])
-        .decode()
-        .strip()
-    )
-    LOGGER.info("environment list: %s", output)
-    envs = json.loads(output)["envs"]
+    def require_env_exists(self):
+        if not self.env_exists():
+            raise EnvDoesNotExistError(self.name)
 
-    for env in envs:
-        if Path(env).name == name:
-            return
+    def export_env_dependencies(self) -> list[str]:
+        self.require_env_exists()
 
-    raise EnvDoesNotExistError(name)
+        stored_env: dict[str, Any] = yaml.load(
+            subprocess.check_output(
+                [
+                    find_conda(),
+                    "env",
+                    "export",
+                    "--from-history",
+                    "--quiet",
+                    "--name",
+                    self.name,
+                ],
+            ),
+            Loader=Loader,
+        )
 
+        return [dep for dep in stored_env.get("dependencies", [])]
 
-def write_env_file(env):
-    env_file = find_env_file()
-    LOGGER.info("write env file: %s", env_file)
-    LOGGER.info("new environment: %s", str(env))
+    def update_env(self):
+        self.require_env_exists()
 
-    with open(env_file, "w") as fptr:
-        yaml.dump(env, fptr, Dumper=Dumper)
-
-
-def export_env():
-    name = read_env_name()
-
-    LOGGER.info("export conda environment")
-    LOGGER.info("output: ")
-    output = (
-        subprocess.check_output(
+        subprocess.run(
             [
                 find_conda(),
                 "env",
-                "export",
-                "--from-history",
+                "update",
                 "--quiet",
                 "--name",
-                name,
+                self.name,
+                "--file",
+                self.path,
             ],
         )
-        .decode()
-        .strip()
-    )
-    for line in output.splitlines():
-        LOGGER.info("\t%s", line)
-    env = yaml.load(output, Loader=Loader)
-    return env
-
-
-def update_env():
-    name = read_env_name()
-    require_env_exists()
-
-    subprocess.run(
-        [
-            find_conda(),
-            "env",
-            "update",
-            "--quiet",
-            "--name",
-            name,
-            "--file",
-            find_env_file(),
-        ],
-    )
