@@ -1,0 +1,7 @@
+name: conda_hooks_pip_deps
+dependencies:
+  - numpy
+  - pip
+  - pip:
+      - mypy
+      - matplotlib

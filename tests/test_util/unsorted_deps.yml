@@ -1,0 +1,5 @@
+name: conda_hooks_unordered
+dependencies:
+  - numpy
+  - matplotlib
+  - absl

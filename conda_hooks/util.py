@@ -79,16 +79,17 @@ def find_conda_executable() -> Path:
 
 
 class EnvironmentFile:
-    def __init__(self, path: Path | None = None):
+    def __init__(self, path: Path | str | None = None):
         self.path: Path
         self.name: str
-        self.content: dict[str, Any]
-        self.dependencies: list[str]
-        self.pip_dependencies: list[str]
-        self.channels: list[str]
+        self.content: dict[str, Any] = {}
+        self.dependencies: list[str] = []
+        self.pip_dependencies: list[str] = []
+        self.channels: list[str] = []
 
         # determine path of env file
         if path is not None:
+            path = Path(path)
             if path.exists():
                 self.path = path
             else:
@@ -113,14 +114,14 @@ class EnvironmentFile:
 
         # determine (pip) dependencies
         for dependency in self.content.get("dependencies", []):
-            if dependency.trim() == "pip" and isinstance(dependency, dict):
+            if isinstance(dependency, str):
+                self.dependencies.append(dependency)
+            elif isinstance(dependency, dict):
                 if not isinstance(dependency["pip"], list):
                     raise InvalidEnvFile("pip dependencies should be a list")
                 else:
                     for pip_dependency in dependency["pip"]:
                         self.pip_dependencies.append(pip_dependency)
-            else:
-                self.dependencies.append(dependency)
 
         self.dependencies.sort()
         self.pip_dependencies.sort()
