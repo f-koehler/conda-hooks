@@ -109,7 +109,7 @@ def test_get_installed_dependencies():
         env.create()
         assert env.get_installed_dependencies() == ["black", "mypy", "python"]
 
-        exe = util.find_conda_executable()
+        exe = util.find_conda_executable(allow_mamba=False)
         subprocess.run([str(exe), "install", "-n", env.name, "-q", "-y", "flake8"])
         assert env.get_installed_dependencies() == ["black", "flake8", "mypy", "python"]
 
