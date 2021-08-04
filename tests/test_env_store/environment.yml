@@ -1,0 +1,12 @@
+name: conda_hooks_default
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python
+  - mypy
+  - black
+  - pip
+  - pip:
+      - isort
+      - pre-commit

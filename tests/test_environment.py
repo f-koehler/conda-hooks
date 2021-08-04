@@ -1,10 +1,11 @@
 import os
+import subprocess
 from pathlib import Path
 
 import pytest
 from util import TestDir
 
-from conda_hooks import environment, errors
+from conda_hooks import environment, errors, util
 
 
 def test_missing_file():
@@ -98,4 +99,18 @@ def test_create_remove():
 
         env.remove()
         assert not env.exists()
+        env.remove()
+
+
+def test_get_installed_dependencies():
+    with TestDir(__file__):
+        env = environment.EnvironmentFile("export.yml")
+        env.remove()
+        env.create()
+        assert env.get_installed_dependencies() == ["black", "mypy", "python"]
+
+        exe = util.find_conda_executable()
+        subprocess.run([str(exe), "install", "-n", env.name, "-q", "-y", "flake8"])
+        assert env.get_installed_dependencies() == ["black", "flake8", "mypy", "python"]
+
         env.remove()

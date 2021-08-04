@@ -111,7 +111,7 @@ class EnvironmentFile:
         if not self.exists():
             raise errors.EnvDoesNotExistError(self.name)
 
-    def export_env_dependencies(self) -> list[str]:
+    def get_installed_dependencies(self) -> list[str]:
         self.require_env_exists()
 
         exported_environment: dict[str, Any] = yaml.load(
@@ -129,9 +129,11 @@ class EnvironmentFile:
             Loader=Loader,
         )
 
-        return [
+        dependencies = [
             dependency for dependency in exported_environment.get("dependencies", [])
         ]
+        dependencies.sort()
+        return dependencies
 
     def update_env(self):
         self.require_env_exists()

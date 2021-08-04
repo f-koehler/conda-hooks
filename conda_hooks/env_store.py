@@ -1,6 +1,7 @@
 import logging
 
-from .util import CondaHookError, EnvironmentFile
+from .environment import EnvironmentFile
+from .errors import CondaHookError
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
@@ -11,10 +12,11 @@ def main():
         env = EnvironmentFile()
 
         if env.exists():
-            for dep in env.export_env_dependencies():
+            for dep in env.get_installed_dependencies():
                 if dep not in env.dependencies:
                     env.dependencies.append(dep)
 
+        env.dependencies.sort()
         env.write()
     except CondaHookError as e:
         LOGGER.error(f"conda-hooks error: {e}")
