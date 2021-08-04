@@ -1,3 +1,4 @@
+import os
 import shutil
 from pathlib import Path
 
@@ -16,6 +17,26 @@ def data_directory(tmpdir: Path, request: pytest.FixtureRequest):
     return path
 
 
+def test_find_conda_executable(data_directory: Path):
+    with pytest.raises(util.NoCondaExecutableError):
+        util.find_conda_executable(data_directory / "no_exe")
+
+    assert (
+        util.find_conda_executable(data_directory / "only_conda")
+        == data_directory / "only_conda" / "conda"
+    )
+
+    assert (
+        util.find_conda_executable(data_directory / "mamba_conda")
+        == data_directory / "mamba_conda" / "mamba"
+    )
+
+
+def test_missing_file(data_directory: Path):
+    with pytest.raises(util.EnvFileNotFoundError):
+        util.EnvironmentFile(data_directory / "this_file_does_not_exist.yml")
+
+
 def test_missing_name(data_directory: Path):
     with pytest.raises(util.InvalidEnvFile):
         util.EnvironmentFile(data_directory / "missing_name.yml")
@@ -26,6 +47,14 @@ def test_empty_env_file(data_directory: Path):
     assert env.dependencies == []
     assert env.pip_dependencies == []
     assert env.channels == []
+
+
+def test_default_path(data_directory: Path):
+    wd = os.getcwd()
+    os.chdir(data_directory)
+    env = util.EnvironmentFile()
+    assert env.path == Path("environment.yml")
+    os.chdir(wd)
 
 
 def test_unsorted_deps(data_directory: Path):
@@ -42,6 +71,12 @@ def test_pip_deps(data_directory: Path):
 def test_channels(data_directory: Path):
     env = util.EnvironmentFile(data_directory / "channels.yml")
     assert env.channels == ["nvidia", "pytorch", "conda-forge"]
+
+
+def test_require_env_exists(data_directory: Path):
+    env = util.EnvironmentFile(data_directory / "non_existent_env.yml")
+    with pytest.raises(util.EnvDoesNotExistError):
+        env.require_env_exists()
 
 
 # def test_create_remove(data_directory: Path):

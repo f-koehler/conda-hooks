@@ -4,7 +4,6 @@ import json
 import logging
 import shutil
 import subprocess
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -48,8 +47,7 @@ class EnvDoesNotExistError(CondaHookError):
         super().__init__(f"environment does not exist: {name}")
 
 
-@lru_cache
-def find_conda_executable() -> Path:
+def find_conda_executable(path: str | Path | None = None) -> Path:
     """Find mamba/conda executable.
 
     This routine finds an executable to run conda commands. It prefers mamba since it
@@ -62,18 +60,22 @@ def find_conda_executable() -> Path:
     Raises:
         NoCondaExecutableError: If no mamba/conda executable was found.
     """
-    result = shutil.which("mamba")
-    if result:
-        path = Path(result).resolve()
-        LOGGER.info(f"found mamba: {path}")
-        return path
+    if path is not None:
+        path = str(path)
 
-    LOGGER.warn("did not find mamba, try to find conda (which might be slower)")
-
+    result = shutil.which("mamba", path=path)
     if result:
-        path = Path(result).resolve()
-        LOGGER.info(f"found conda: {path}")
-        return path
+        exe_path = Path(result).resolve()
+        LOGGER.info(f"found mamba: {exe_path}")
+        return exe_path
+
+    LOGGER.warning("did not find mamba, try to find conda (which might be slower)")
+
+    result = shutil.which("conda", path=path)
+    if result:
+        exe_path = Path(result).resolve()
+        LOGGER.info(f"found conda: {exe_path}")
+        return exe_path
 
     raise NoCondaExecutableError()
 
