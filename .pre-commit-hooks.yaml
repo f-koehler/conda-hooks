@@ -6,11 +6,11 @@
     - commit
   entry: conda_env_store
   always_run: true
-- id: conda-env-update
-  name: conda-env-update
-  language: python
-  pass_filenames: false
-  stages:
-    - merge-commit
-  entry: conda_env_update
-  always_run: true
+# - id: conda-env-update
+#   name: conda-env-update
+#   language: python
+#   pass_filenames: false
+#   stages:
+#     - merge-commit
+#   entry: conda_env_update
+#   always_run: true
