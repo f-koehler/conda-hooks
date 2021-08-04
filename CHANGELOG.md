@@ -1,5 +1,5 @@
-# CHANGELOG
 
-## 0.2.2 - 2021-07-22
+0.3.0 - 2021-08-04
+------------------
 
-Improve project tooling.
+Completely rewrite code and add unit tests.
