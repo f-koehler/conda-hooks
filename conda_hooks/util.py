@@ -156,7 +156,7 @@ class EnvironmentFile:
             )
             .decode()
             .strip()
-        )
+        )["envs"]
         for environment in environments:
             if Path(environment).name == self.name:
                 return True
@@ -207,6 +207,7 @@ class EnvironmentFile:
 
     def create(self):
         if self.exists():
+            LOGGER.warning(f"environment {self.name} exists, do not create")
             return
 
         cmd = [
@@ -224,6 +225,7 @@ class EnvironmentFile:
 
     def remove(self):
         if not self.exists():
+            LOGGER.warning(f"environment {self.name} does not exists, do not remove")
             return
 
         subprocess.check_output(

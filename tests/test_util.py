@@ -97,14 +97,16 @@ def test_write(data_directory: Path):
     assert env.channels == env_new.channels
 
 
-# def test_create_remove(data_directory: Path):
-#     env = util.EnvironmentFile(data_directory / "small.yml")
-#     env.remove()
+def test_create_remove(data_directory: Path):
+    env = util.EnvironmentFile(data_directory / "small.yml")
+    env.remove()
 
-#     assert not env.exists()
+    assert not env.exists()
 
-#     env.create()
-#     assert env.exists()
+    env.create()
+    assert env.exists()
+    env.create()
 
-#     env.remove()
-#     assert not env.exists()
+    env.remove()
+    assert not env.exists()
+    env.remove()
