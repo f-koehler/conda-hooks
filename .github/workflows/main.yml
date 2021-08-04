@@ -48,7 +48,12 @@ jobs:
           poetry run pip install --upgrade pip
           poetry install
       - name: Run tests
-        run: poetry run invoke tests
+        run: poetry run pytest --cov-report xml --cov=conda_hooks
+      - name: Upload code coverage
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
 
   lint:
     name: Lint
