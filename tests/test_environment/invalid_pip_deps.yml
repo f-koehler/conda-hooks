@@ -1,0 +1,5 @@
+name: conda_hooks_invalid_pip_deps
+dependencies:
+  - numpy
+  - pip
+  - pip: mypy
