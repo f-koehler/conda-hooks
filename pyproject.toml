@@ -1,10 +1,11 @@
 [tool.poetry]
 name = "conda-hooks"
 version = "0.2.2"
-description = ""
+description = "Keep anaconda environment files up to date"
 authors = ["Fabian Köhler <fabian.koehler@protonmail.ch>"]
 license = "MIT"
 readme = "README.md"
+homepage = "https://github.com/f-koehler/conda-hooks"
 repository = "https://github.com/f-koehler/conda-hooks"
 
 [tool.poetry.dependencies]
