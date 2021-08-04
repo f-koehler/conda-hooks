@@ -84,9 +84,6 @@ def test_require_env_exists(data_directory: Path):
 
 
 def test_write(data_directory: Path):
-    # compute current hash
-    checksum = util.hash_file(data_directory / "write.yml")
-
     # write file
     env = util.EnvironmentFile(data_directory / "write.yml")
     env.write()
@@ -98,9 +95,6 @@ def test_write(data_directory: Path):
     assert env.dependencies == env_new.dependencies
     assert env.pip_dependencies == env_new.pip_dependencies
     assert env.channels == env_new.channels
-
-    new_checksum = util.hash_file(data_directory / "write.yml")
-    assert checksum == new_checksum
 
 
 # def test_create_remove(data_directory: Path):

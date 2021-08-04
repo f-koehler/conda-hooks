@@ -47,10 +47,6 @@ class EnvDoesNotExistError(CondaHookError):
         super().__init__(f"environment does not exist: {name}")
 
 
-def hash_file(path: str | Path) -> str:
-    return subprocess.check_output(["sha256sum", str(path)]).decode().split()[0].strip()
-
-
 def find_conda_executable(path: str | Path | None = None) -> Path:
     """Find mamba/conda executable.
 
