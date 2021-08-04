@@ -27,6 +27,12 @@ jobs:
       - name: Install mamba
         shell: bash -l {0}
         run: conda install -c conda-forge -n base -q -y mamba
+      - name: Conda info
+        shell: bash -l {0}
+        run: conda info
+      - name: Mamba info
+        shell: bash -l {0}
+        run: mamba info
       - name: Set up Pip cache
         uses: actions/cache@v2
         id: pip-cache

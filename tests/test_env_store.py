@@ -6,7 +6,7 @@ from util import TestDir
 from conda_hooks import env_store, environment, util
 
 
-def test_get_installed_dependencies():
+def test_main():
     with TestDir(__file__):
         stored_env = environment.EnvironmentFile()
         stored_env.create()
