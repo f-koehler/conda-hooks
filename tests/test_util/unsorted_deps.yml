@@ -1,4 +1,4 @@
-name: conda_hooks_unordered
+name: conda_hooks_unsorted_deps
 dependencies:
   - numpy
   - matplotlib
