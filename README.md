@@ -1,7 +1,8 @@
 # conda-hooks
 
 Keep anaconda environment files up to date with installed packages.
-This can easily be automated using [pre-commit](https://pre-commit.com/) hooks.
+In contrast to `conda export` it keeps the channel list intact, sorts packages alphabetically and does not purge `pip` dependencies.
+This can easily be automated using [pre-commit](https://pre-commit.com/) hooks to automatically check for any missing packages before committing.
 
 [![Build Status](https://img.shields.io/github/workflow/status/f-koehler/conda-hooks/build)](https://github.com/f-koehler/conda-hooks/actions)
 [![codecov](https://codecov.io/gh/f-koehler/conda-hooks/branch/main/graph/badge.svg?token=4XHPAHUDOL)](https://codecov.io/gh/f-koehler/conda-hooks)
@@ -11,7 +12,7 @@ This can easily be automated using [pre-commit](https://pre-commit.com/) hooks.
 
 ## Installation
 
-### As a python package
+### As a Python package
 
 The `conda_hooks` package is installable as a normal python package, for example via pip:
 
@@ -26,9 +27,46 @@ In your `.pre-commit-config.yaml` file add
 ```yaml
 repos:
   - repo: https://github.com/f-koehler/conda-hooks
-    rev: "0.2.2"
+    rev: "0.4.0"
     hooks:
       - id: prettier
+```
+
+## Usage
+
+### Command line
+
+Running `env_store --help` will print information about the available command line options.
+We can either specify paths to environment file explicitly
+
+```bash
+env_store environment1.yml env2.yaml src/env3.yml
+```
+
+or use globbing patterns like this:
+
+```bash
+env_store -g **/environment.yml -g **/env.yml
+```
+
+Of course we can combine both methods:
+
+```bash
+env_store -g src/env*.yml environment.yml
+```
+
+### As a `pre-commit` hook
+
+When using the `pre-commit` hook we can use the same command line arguments, so please refer to the section above.
+An example using globbing patterns would be:
+
+```yaml
+repos:
+  - repo: https://github.com/f-koehler/conda-hooks
+    rev: "0.4.0"
+    hooks:
+      - id: prettier
+        args: ["**/environment.yml"]
 ```
 
 ## Roadmap
