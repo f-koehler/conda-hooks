@@ -12,27 +12,37 @@ logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(__name__)
 
 
-def main(argv: Sequence[str] | None = None):
+def get_argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
-    parser.add_argument("-g", "--glob", type=str, nargs="*", default=[])
+    parser.add_argument("-g", "--glob", type=str, action="append", default=[])
     parser.add_argument("files", type=Path, nargs="*", default=[])
-    args = parser.parse_args(argv)
+    return parser
+
+
+def get_env_files(args: argparse.Namespace) -> list[Path]:
+    files: list[Path] = []
+    LOGGER.error(args.glob)
+    for glob in args.glob:
+        files += list(Path.cwd().glob(glob))
+    for file in args.files:
+        if not file.exists():
+            raise EnvFileNotFoundError(file)
+        if not file.is_file():
+            raise NotAFileError(file)
+        files.append(file)
+
+    if not files:
+        files = [file for file in ENV_DEFAULT_PATHS if file.exists() and file.is_file()]
+
+    return [file.resolve() for file in files]
+
+
+def main(argv: Sequence[str] | None = None):
 
     try:
-        files: list[Path] = []
-        for glob in args.glob:
-            files += Path.cwd().glob(glob)
-        for file in args.files:
-            if not file.exists():
-                raise EnvFileNotFoundError(file)
-            if not file.is_file():
-                raise NotAFileError(file)
-            files.append(file)
-
-        if not files:
-            files = [
-                file for file in ENV_DEFAULT_PATHS if file.exists() and file.is_file()
-            ]
+        parser = get_argument_parser()
+        args = parser.parse_args(argv)
+        files = get_env_files(args)
 
         if not files:
             raise NoEnvFileError()
