@@ -39,7 +39,7 @@ class EnvironmentFile:
             if path.exists():
                 self.path = path
             else:
-                raise errors.EnvFileNotFoundError()
+                raise errors.NoEnvFileError()
         else:
             for default_path in ENV_DEFAULT_PATHS:
                 if default_path.exists():
@@ -47,7 +47,7 @@ class EnvironmentFile:
                     self.path = default_path
                     break
             else:
-                raise errors.EnvFileNotFoundError()
+                raise errors.NoEnvFileError()
 
         # read env file
         with open(self.path) as fptr:

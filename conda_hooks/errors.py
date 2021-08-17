@@ -1,3 +1,8 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+
 class CondaHookError(Exception):
     pass
 
@@ -7,9 +12,19 @@ class NoCondaExecutableError(CondaHookError):
         super().__init__("failed to find mamba/conda")
 
 
-class EnvFileNotFoundError(CondaHookError):
+class NoEnvFileError(CondaHookError):
     def __init__(self):
-        super().__init__("failed to find env file")
+        super().__init__("failed to find any env file")
+
+
+class EnvFileNotFoundError(CondaHookError):
+    def __init__(self, path: str | Path):
+        super().__init__(f"env file does not exist: {path}")
+
+
+class NotAFileError(CondaHookError):
+    def __init__(self, path: str | Path):
+        super().__init__(f"not a file: {path}")
 
 
 class InvalidEnvFile(CondaHookError):

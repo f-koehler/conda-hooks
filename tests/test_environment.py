@@ -10,7 +10,7 @@ from conda_hooks import environment, errors, util
 
 def test_missing_file():
     with TestDir(__file__):
-        with pytest.raises(errors.EnvFileNotFoundError):
+        with pytest.raises(errors.NoEnvFileError):
             environment.EnvironmentFile("this_file_does_not_exist.yml")
 
 
@@ -36,7 +36,7 @@ def test_default_path():
         assert env.path == Path("environment.yml")
 
         os.remove("environment.yml")
-        with pytest.raises(errors.EnvFileNotFoundError):
+        with pytest.raises(errors.NoEnvFileError):
             env = environment.EnvironmentFile()
 
 

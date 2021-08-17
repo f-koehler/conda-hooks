@@ -11,7 +11,7 @@ def test_main():
         stored_env = environment.EnvironmentFile()
         stored_env.create()
 
-        env_store.main()
+        env_store.main([])
         new_env = environment.EnvironmentFile()
         assert stored_env.name == new_env.name
         assert stored_env.path == new_env.path
@@ -30,7 +30,7 @@ def test_main():
                 "flake8",
             ]
         )
-        env_store.main()
+        env_store.main([])
         new_env = environment.EnvironmentFile()
         assert stored_env.name == new_env.name
         assert stored_env.path == new_env.path
@@ -46,4 +46,4 @@ def test_main():
 
         stored_env.remove()
         os.remove("environment.yml")
-        env_store.main()
+        env_store.main([])
