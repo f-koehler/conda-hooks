@@ -52,7 +52,7 @@ conda_env_store -g **/environment.yml -g **/env.yml
 Of course we can combine both methods:
 
 ```bash
-env_store -g src/env*.yml environment.yml
+conda_env_store -g src/env*.yml environment.yml
 ```
 
 ### As a `pre-commit` hook
