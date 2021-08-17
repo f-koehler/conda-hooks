@@ -1,0 +1,3 @@
+Type: patch
+
+Fix README.
