@@ -73,7 +73,6 @@ repos:
 
 Currently missing features that should be implemented in the near future:
 
-- CLI interface to specify path to (multiple) environment file(s)
 - handle pinned versions
 
 ## Usage/Examples
