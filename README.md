@@ -66,7 +66,7 @@ repos:
     rev: "0.4.0"
     hooks:
       - id: prettier
-        args: ["**/environment.yml"]
+        args: ["-g", "**/environment.yml"]
 ```
 
 ## Roadmap
