@@ -13,9 +13,26 @@ LOGGER = logging.getLogger(__name__)
 
 
 def get_argument_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-g", "--glob", type=str, action="append", default=[])
-    parser.add_argument("files", type=Path, nargs="*", default=[])
+    parser = argparse.ArgumentParser(
+        description=(
+            "Check if one or multiple conda environment files"
+            " are up-to-date with the installed packages."
+        )
+    )
+    parser.add_argument(
+        "-g",
+        "--glob",
+        type=str,
+        action="append",
+        default=[],
+        help=(
+            "Globbing pattern used to find environment files"
+            " (can be specified multiple times)."
+        ),
+    )
+    parser.add_argument(
+        "files", type=Path, nargs="*", default=[], help="Paths to environment files."
+    )
     return parser
 
 
