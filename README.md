@@ -40,13 +40,13 @@ Running `env_store --help` will print information about the available command li
 We can either specify paths to environment file explicitly
 
 ```bash
-env_store environment1.yml env2.yaml src/env3.yml
+conda_env_store environment1.yml env2.yaml src/env3.yml
 ```
 
 or use globbing patterns like this:
 
 ```bash
-env_store -g **/environment.yml -g **/env.yml
+conda_env_store -g **/environment.yml -g **/env.yml
 ```
 
 Of course we can combine both methods:
