@@ -27,7 +27,7 @@ In your `.pre-commit-config.yaml` file add
 ```yaml
 repos:
   - repo: https://github.com/f-koehler/conda-hooks
-    rev: "0.4.0"
+    rev: "0.4.1"
     hooks:
       - id: prettier
 ```
@@ -63,7 +63,7 @@ An example using globbing patterns would be:
 ```yaml
 repos:
   - repo: https://github.com/f-koehler/conda-hooks
-    rev: "0.4.0"
+    rev: "0.4.1"
     hooks:
       - id: prettier
         args: ["-g", "**/environment.yml"]
@@ -74,7 +74,3 @@ repos:
 Currently missing features that should be implemented in the near future:
 
 - handle pinned versions
-
-## Usage/Examples
-
-TODO

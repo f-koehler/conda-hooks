@@ -1,3 +1,3 @@
-Type: patch
+Release type: patch
 
 Fix README.
