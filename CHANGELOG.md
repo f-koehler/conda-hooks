@@ -1,3 +1,5 @@
-## 0.4.0 - 2021-08-17
 
-Add command line options to specify environment files explicitly and/or globbing patterns.
+0.4.1 - 2021-08-18
+------------------
+
+Fix README.
