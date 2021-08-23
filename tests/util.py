@@ -13,7 +13,9 @@ def TestDir(file: str):
     with tempfile.TemporaryDirectory() as tmpdir:
         working_dir = Path(tmpdir)
         if resource_dir.exists():
-            shutil.copytree(resource_dir, working_dir, dirs_exist_ok=True)
+            shutil.rmtree(working_dir)
+
+        shutil.copytree(resource_dir, working_dir)
 
         try:
             os.chdir(working_dir)
