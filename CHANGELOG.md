@@ -1,5 +1,5 @@
 
-0.4.1 - 2021-08-18
+0.4.2 - 2021-08-23
 ------------------
 
-Fix README.
+Make code compatible with python 3.7.
