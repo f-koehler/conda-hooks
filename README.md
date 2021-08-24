@@ -68,9 +68,3 @@ repos:
       - id: prettier
         args: ["-g", "**/environment.yml"]
 ```
-
-## Roadmap
-
-Currently missing features that should be implemented in the near future:
-
-- handle pinned versions
