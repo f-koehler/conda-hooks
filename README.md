@@ -27,9 +27,9 @@ In your `.pre-commit-config.yaml` file add
 ```yaml
 repos:
   - repo: https://github.com/f-koehler/conda-hooks
-    rev: "0.4.1"
+    rev: "0.4.2"
     hooks:
-      - id: prettier
+      - id: conda-env-store
 ```
 
 ## Usage
