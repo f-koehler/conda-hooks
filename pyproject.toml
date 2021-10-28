@@ -10,7 +10,7 @@ repository = "https://github.com/f-koehler/conda-hooks"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-PyYAML = "^5.3.1"
+PyYAML = ">=5.3.1,<7.0.0"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.910"
