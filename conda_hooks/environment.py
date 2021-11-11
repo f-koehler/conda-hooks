@@ -26,8 +26,6 @@ ENV_DEFAULT_PATHS = [
 
 class EnvironmentFile:
     def __init__(self, path: Path | str | None = None):
-        self.path: Path
-        self.name: str
         self.content: dict[str, Any] = {}
         self.dependencies: list[str] = []
         self.pip_dependencies: list[str] = []
@@ -37,26 +35,26 @@ class EnvironmentFile:
         if path is not None:
             path = Path(path)
             if path.exists():
-                self.path = path
+                self.env_file_path = path
             else:
                 raise errors.NoEnvFileError()
         else:
             for default_path in ENV_DEFAULT_PATHS:
                 if default_path.exists():
                     LOGGER.debug("automatically found env file: {default_path}")
-                    self.path = default_path
+                    self.env_file_path = default_path
                     break
             else:
                 raise errors.NoEnvFileError()
 
         # read env file
-        with open(self.path) as fptr:
+        with open(self.env_file_path) as fptr:
             self.content = yaml.load(fptr, Loader=Loader)
 
         # determine env name
         if "name" not in self.content:
             raise errors.InvalidEnvFile("environment name missing")
-        self.name = self.content["name"]
+        self.name: str = self.content["name"]
 
         # determine (pip) dependencies
         for dependency in self.content.get("dependencies", []):
@@ -88,7 +86,7 @@ class EnvironmentFile:
 
     def write(self, path: Path | None = None):
         if path is None:
-            path = self.path
+            path = self.env_file_path
 
         content: dict[str, Any] = {"name": self.name}
         if self.channels:
@@ -158,7 +156,7 @@ class EnvironmentFile:
                 "--name",
                 self.name,
                 "--file",
-                self.path,
+                self.env_file_path,
             ],
         )
 
@@ -175,7 +173,7 @@ class EnvironmentFile:
             "--name",
             self.name,
             "--file",
-            str(self.path),
+            str(self.env_file_path),
         ]
 
         subprocess.check_output(cmd)

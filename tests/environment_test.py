@@ -33,7 +33,7 @@ def test_default_path():
     with TestDir(__file__):
         env = environment.EnvironmentFile()
         assert env.name == "conda_hooks_default"
-        assert env.path == Path("environment.yml")
+        assert env.env_file_path == Path("environment.yml")
 
         os.remove("environment.yml")
         with pytest.raises(errors.NoEnvFileError):
@@ -79,7 +79,7 @@ def test_write():
 
         # read file back
         env_new = environment.EnvironmentFile("write.yml")
-        assert env.path == env_new.path
+        assert env.env_file_path == env_new.env_file_path
         assert env.name == env_new.name
         assert env.dependencies == env_new.dependencies
         assert env.pip_dependencies == env_new.pip_dependencies

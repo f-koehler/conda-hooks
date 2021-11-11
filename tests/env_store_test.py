@@ -79,7 +79,7 @@ def test_main():
         env_store.main([])
         new_env = environment.EnvironmentFile()
         assert stored_env.name == new_env.name
-        assert stored_env.path == new_env.path
+        assert stored_env.env_file_path == new_env.env_file_path
         assert stored_env.channels == new_env.channels
         assert stored_env.dependencies == new_env.dependencies
         assert stored_env.pip_dependencies == new_env.pip_dependencies
@@ -98,7 +98,7 @@ def test_main():
         env_store.main([])
         new_env = environment.EnvironmentFile()
         assert stored_env.name == new_env.name
-        assert stored_env.path == new_env.path
+        assert stored_env.env_file_path == new_env.env_file_path
         assert stored_env.channels == new_env.channels
         assert stored_env.pip_dependencies == new_env.pip_dependencies
 
