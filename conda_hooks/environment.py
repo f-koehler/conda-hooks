@@ -140,7 +140,7 @@ class EnvironmentFile:
 
         subprocess.run(
             [
-                util.find_conda_executable(),
+                util.find_conda_executable(allow_mamba=True),
                 "env",
                 "update",
                 "--quiet",
@@ -157,7 +157,7 @@ class EnvironmentFile:
             return
 
         cmd = [
-            str(util.find_conda_executable()),
+            str(util.find_conda_executable(allow_mamba=True)),
             "env",
             "create",
             "--quiet",
