@@ -33,15 +33,17 @@ def find_conda_executable(
         result = shutil.which("mamba", path=path)
         if result:
             exe_path = Path(result).resolve()
-            LOGGER.info(f"found mamba: {exe_path}")
+            LOGGER.debug(f"found mamba: {exe_path}")
             return exe_path
-
-    LOGGER.warning("did not find mamba, try to find conda (which might be slower)")
+        else:
+            LOGGER.warning(
+                "did not find mamba, try to find conda (which might be slower)",
+            )
 
     result = shutil.which("conda", path=path)
     if result:
         exe_path = Path(result).resolve()
-        LOGGER.info(f"found conda: {exe_path}")
+        LOGGER.debug(f"found conda: {exe_path}")
         return exe_path
 
     raise errors.NoCondaExecutableError()

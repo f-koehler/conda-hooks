@@ -43,7 +43,7 @@ class EnvironmentFile:
         else:
             for default_path in ENV_DEFAULT_PATHS:
                 if default_path.exists():
-                    LOGGER.info("automatically found env file: {default_path}")
+                    LOGGER.debug("automatically found env file: {default_path}")
                     self.path = default_path
                     break
             else:
@@ -74,6 +74,17 @@ class EnvironmentFile:
 
         # read channels
         self.channels = self.content.get("channels", [])
+
+    def __eq__(self, other) -> bool:
+        return (
+            (self.name == other.name)
+            and (self.dependencies == other.dependencies)
+            and (self.pip_dependencies == other.pip_dependencies)
+            and (self.channels == other.channels)
+        )
+
+    def __ne__(self, other) -> bool:
+        return not self.__eq__(other)
 
     def write(self, path: Path | None = None):
         if path is None:

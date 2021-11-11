@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import tempfile
 from pathlib import Path
 from typing import Sequence
 
@@ -74,10 +75,21 @@ def main(argv: Sequence[str] | None = None):
             if env.exists():
                 for dep in env.get_installed_dependencies():
                     if dep not in env.dependencies:
+                        LOGGER.error(f"found missing dependency: {dep}")
                         env.dependencies.append(dep)
 
             env.dependencies.sort()
-            env.write()
+
+            with tempfile.TemporaryDirectory() as tmpdir:
+                path = Path(tmpdir) / "env.yml"
+                env.write(path)
+                new_env = EnvironmentFile(path)
+
+                if new_env != env:
+                    LOGGER.error("environment changed!")
+                    env.write()
+                else:
+                    LOGGER.error("environment did not change.")
     except CondaHookError as e:
         LOGGER.error(f"conda-hooks error: {e}")
 
