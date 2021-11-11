@@ -11,12 +11,10 @@ def test_find_conda_executable():
         with pytest.raises(errors.NoCondaExecutableError):
             util.find_conda_executable("no_exe")
 
-        assert (
-            util.find_conda_executable("only_conda")
-            == (Path("only_conda") / "conda").resolve()
-        )
+        path = str(util.find_conda_executable("only_conda"))
+        expected_path = str((Path("only_conda") / "conda").resolve())
+        assert path == expected_path
 
-        assert (
-            util.find_conda_executable("mamba_conda")
-            == (Path("mamba_conda") / "mamba").resolve()
-        )
+        path = str(util.find_conda_executable("mamba_conda", allow_mamba=True))
+        expected_path = str((Path("mamba_conda") / "mamba").resolve())
+        assert path == expected_path
