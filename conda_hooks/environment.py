@@ -96,10 +96,10 @@ class EnvironmentFile:
     def exists(self) -> bool:
         environments = json.loads(
             subprocess.check_output(
-                [util.find_conda_executable(), "env", "list", "--quiet", "--json"]
+                [util.find_conda_executable(), "env", "list", "--quiet", "--json"],
             )
             .decode()
-            .strip()
+            .strip(),
         )["envs"]
         for environment in environments:
             if Path(environment).name == self.name:
@@ -182,5 +182,5 @@ class EnvironmentFile:
                 "--quiet",
                 "--name",
                 self.name,
-            ]
+            ],
         )

@@ -11,7 +11,8 @@ LOGGER = logging.getLogger(__name__)
 
 
 def find_conda_executable(
-    path: str | Path | None = None, allow_mamba: bool = False
+    path: str | Path | None = None,
+    allow_mamba: bool = False,
 ) -> Path:
     """Find mamba/conda executable.
 

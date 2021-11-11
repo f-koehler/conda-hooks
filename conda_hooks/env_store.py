@@ -17,7 +17,7 @@ def get_argument_parser() -> argparse.ArgumentParser:
         description=(
             "Check if one or multiple conda environment files"
             " are up-to-date with the installed packages."
-        )
+        ),
     )
     parser.add_argument(
         "-g",
@@ -31,7 +31,11 @@ def get_argument_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
-        "files", type=Path, nargs="*", default=[], help="Paths to environment files."
+        "files",
+        type=Path,
+        nargs="*",
+        default=[],
+        help="Paths to environment files.",
     )
     return parser
 

@@ -13,21 +13,21 @@ def test_get_env_files():
     with TestDir(__file__):
         parser = env_store.get_argument_parser()
         assert env_store.get_env_files(parser.parse_args([])) == [
-            Path("environment.yml").resolve()
+            Path("environment.yml").resolve(),
         ]
 
         files = list(
             sorted(
                 env_store.get_env_files(
-                    parser.parse_args(["--glob", "glob/environment*.yml"])
-                )
-            )
+                    parser.parse_args(["--glob", "glob/environment*.yml"]),
+                ),
+            ),
         )
         expected = list(
             sorted(
                 Path("glob").resolve() / entry
                 for entry in ["environment1.yml", "environment2.yml"]
-            )
+            ),
         )
         assert files == expected
 
@@ -35,16 +35,16 @@ def test_get_env_files():
             sorted(
                 env_store.get_env_files(
                     parser.parse_args(
-                        ["--glob", "glob/environment*.yml", "--glob", "glob/env*.yaml"]
-                    )
-                )
-            )
+                        ["--glob", "glob/environment*.yml", "--glob", "glob/env*.yaml"],
+                    ),
+                ),
+            ),
         )
         expected = list(
             sorted(
                 Path("glob").resolve() / entry
                 for entry in ["env3.yaml", "environment1.yml", "environment2.yml"]
-            )
+            ),
         )
         assert files == expected
 
@@ -57,16 +57,16 @@ def test_get_env_files():
                             "glob/env*.yaml",
                             "glob/environment1.yml",
                             "glob/environment2.yml",
-                        ]
-                    )
-                )
-            )
+                        ],
+                    ),
+                ),
+            ),
         )
         expected = list(
             sorted(
                 Path("glob").resolve() / entry
                 for entry in ["env3.yaml", "environment1.yml", "environment2.yml"]
-            )
+            ),
         )
         assert files == expected
 
@@ -93,7 +93,7 @@ def test_main():
                 "-q",
                 "-y",
                 "flake8",
-            ]
+            ],
         )
         env_store.main([])
         new_env = environment.EnvironmentFile()
