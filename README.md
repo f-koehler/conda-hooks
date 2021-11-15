@@ -2,7 +2,7 @@
 
 Keep anaconda environment files up to date with installed packages.
 In contrast to `conda export` it keeps the channel list intact, sorts packages alphabetically and does not purge `pip` dependencies.
-This can easily be automated using [pre-commit](https://pre-commit.com/) hooks to automatically check for any missing packages before committing.
+`conda-hooks` can be integrated easily with [pre-commit](https://pre-commit.com/) hooks to automatically check for any missing packages before committing.
 
 [![Build Status](https://img.shields.io/github/workflow/status/f-koehler/conda-hooks/build)](https://github.com/f-koehler/conda-hooks/actions)
 [![codecov](https://codecov.io/gh/f-koehler/conda-hooks/branch/main/graph/badge.svg?token=4XHPAHUDOL)](https://codecov.io/gh/f-koehler/conda-hooks)
