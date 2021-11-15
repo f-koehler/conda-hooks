@@ -54,7 +54,7 @@ jobs:
           poetry run pip install --upgrade pip
           poetry install
       - name: Run tests
-        run: poetry run pytest --cov-report xml --cov=conda_hooks
+        run: poetry run pytest -v --cov-report xml --cov=conda_hooks
       - name: Upload code coverage
         uses: codecov/codecov-action@v2
         with:
