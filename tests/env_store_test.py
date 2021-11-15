@@ -92,7 +92,7 @@ def test_main():
                 stored_env.name,
                 "-q",
                 "-y",
-                "flake8",
+                "jinja2",
             ],
             check=True,
         )
@@ -107,7 +107,7 @@ def test_main():
             dep for dep in new_env.dependencies if dep not in stored_env.dependencies
         ]
         assert new_deps == [
-            "flake8",
+            "jinja2",
         ]
 
         stored_env.remove()

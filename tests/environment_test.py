@@ -118,10 +118,10 @@ def test_get_installed_dependencies():
                 env.name,
                 "-q",
                 "-y",
-                "flake8",
+                "jinja2",
             ],
             check=True,
         )
-        assert env.get_installed_dependencies() == ["black", "flake8", "mypy", "python"]
+        assert env.get_installed_dependencies() == ["black", "jinja2", "mypy", "python"]
 
         env.remove()
