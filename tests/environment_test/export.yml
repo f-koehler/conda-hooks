@@ -1,6 +1,5 @@
 name: conda_hooks_export
 channels:
-  - conda-forge
   - defaults
 dependencies:
   - python
