@@ -94,6 +94,7 @@ def test_main():
                 "-y",
                 "flake8",
             ],
+            check=True,
         )
         env_store.main([])
         new_env = environment.EnvironmentFile()
