@@ -25,9 +25,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install miniconda
         uses: conda-incubator/setup-miniconda@v2
-        # with:
-        #   auto-update-conda: true
-        #   python-version: ${{ matrix.python-version }}
+        with:
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
       - name: Install mamba
         shell: bash -l {0}
         run: conda install -c conda-forge -n base -q -y mamba
