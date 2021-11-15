@@ -21,8 +21,8 @@ jobs:
           - ubuntu-18.04
           - macos-11
           - macos-10.15
-          - windows-2019
-          - windows-2016
+          # - windows-2019
+          # - windows-2016
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
