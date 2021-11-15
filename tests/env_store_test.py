@@ -86,7 +86,7 @@ def test_main():
 
         subprocess.run(
             [
-                str(util.find_conda_executable(allow_mamba=False)),
+                str(util.find_conda_executable()),
                 "install",
                 "-n",
                 stored_env.name,

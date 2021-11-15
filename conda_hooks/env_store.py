@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import argparse
 import logging
-import tempfile
+import os
 from pathlib import Path
 from typing import Sequence
 
 from .environment import ENV_DEFAULT_PATHS, EnvironmentFile
 from .errors import CondaHookError, EnvFileNotFoundError, NoEnvFileError, NotAFileError
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 LOGGER = logging.getLogger(__name__)
 
 
@@ -71,25 +71,21 @@ def main(argv: Sequence[str] | None = None):
 
         for file in files:
             env = EnvironmentFile(file)
+            new_env = EnvironmentFile(file)
 
             if env.exists():
                 for dep in env.get_installed_dependencies():
                     if dep not in env.dependencies:
                         LOGGER.error(f"found missing dependency: {dep}")
-                        env.dependencies.append(dep)
+                        new_env.dependencies.append(dep)
 
-            env.dependencies.sort()
+            new_env.dependencies.sort()
 
-            with tempfile.TemporaryDirectory() as tmpdir:
-                path = Path(tmpdir) / "env.yml"
-                env.write(path)
-                new_env = EnvironmentFile(path)
-
-                if new_env != env:
-                    LOGGER.error("environment changed!")
-                    env.write()
-                else:
-                    LOGGER.error("environment did not change.")
+            if new_env != env:
+                LOGGER.error("environment changed!")
+                new_env.write()
+            else:
+                LOGGER.info("environment did not change.")
     except CondaHookError as e:
         LOGGER.error(f"conda-hooks error: {e}")
 
