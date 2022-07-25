@@ -38,14 +38,14 @@ repos:
     hooks:
       - id: add-trailing-comma
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.961
+    rev: v0.971
     hooks:
       - id: mypy
         args: [--no-strict-optional, --ignore-missing-imports]
         additional_dependencies:
           - "types-PyYAML"
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.37.1
+    rev: v2.37.2
     hooks:
       - id: pyupgrade
         args: [--py37-plus]
@@ -74,6 +74,6 @@ repos:
     hooks:
       - id: yesqa
   - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v1.20.1
+    rev: v1.20.2
     hooks:
       - id: setup-cfg-fmt
