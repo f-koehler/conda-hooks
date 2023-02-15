@@ -60,7 +60,6 @@ def get_env_files(args: argparse.Namespace) -> list[Path]:
 
 
 def main(argv: Sequence[str] | None = None):
-
     try:
         parser = get_argument_parser()
         args = parser.parse_args(argv)
